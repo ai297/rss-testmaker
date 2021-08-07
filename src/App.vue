@@ -1,3 +1,18 @@
+<template>
+  <div id="app">
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
+  name: 'App',
+  components: {}
+});
+</script>
+
+<style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
@@ -12,7 +27,8 @@ body {
 
 h1 { color: #e6c300; }
 
-.test-maker {
+#app {
   width: 100%;
   max-width: 600px;
 }
+</style>
