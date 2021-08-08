@@ -100,7 +100,6 @@ export default Vue.extend({
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
