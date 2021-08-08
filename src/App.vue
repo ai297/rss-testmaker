@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <h2>Test</h2>
     <div class="controls">
-      <label class="load-file"><input type="file" ref="file">Load from file</label>
+      <label class="load-file">
+        <input type="file" ref="file" accept="application/json" @change="loadJson">
+        Load JSON
+      </label>
       <button @click="save">Save JSON</button>
     </div>
     <h2>Settings</h2>
@@ -65,16 +67,23 @@ export default Vue.extend({
       return (this.$store.state as State).questions;
     },
   },
-  methods: mapActions([
-    'editMode',
-    'newQuestion',
-    'removeQuestion',
-    'removeAnswer',
-    'newAnswer',
-    'updateAnswer',
-    'updateQuestion',
-    'save',
-  ]),
+  methods: {
+    ...mapActions([
+      'editMode',
+      'newQuestion',
+      'removeQuestion',
+      'removeAnswer',
+      'newAnswer',
+      'updateAnswer',
+      'updateQuestion',
+      'save',
+    ]),
+    loadJson(e: InputEvent) {
+      const input = e.target as HTMLInputElement;
+      if (!input.files) return;
+      this.$store.dispatch('load', input.files[0]);
+    },
+  },
 });
 </script>
 

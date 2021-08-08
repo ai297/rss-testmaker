@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { TestSettings, Question, Answer } from './contracts';
+import { TestSettings, Question, Answer, Test } from './contracts';
 import { saveJson } from './out';
+import { getTestSettings, getQuestions } from './in';
 
 Vue.use(Vuex);
 
@@ -75,7 +76,13 @@ export default new Vuex.Store({
       }
     },
     changeEditMode({ questions }, payload: { questionIndex: number, enable: boolean }) {
+      if (payload.enable) questions.forEach(q => q.editMode = false);
       questions[payload.questionIndex].editMode = payload.enable;
+    },
+    setState(state, {fileName, data}: { fileName: string, data: Test }) {
+      state.testSettings = getTestSettings(data);
+      state.questions = getQuestions(data);
+      state.fileName = fileName;
     },
   },
   actions: {
@@ -111,6 +118,11 @@ export default new Vuex.Store({
     },
     save({ state }) {
       saveJson(state);
+    },
+    async load({ commit }, file: File) {
+      const jsonString = await file.text();
+      const data: Test = JSON.parse(jsonString);
+      commit('setState', { fileName: file.name, data });
     },
   },
 });

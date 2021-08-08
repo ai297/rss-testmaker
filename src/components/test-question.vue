@@ -47,10 +47,10 @@ export default Vue.extend({
   align-items: center;
 
   & > .question-text {
-    flex: 1 1 auto;
+    flex: 1 1 calc(100% - 10em);
     font-size: 1.2em;
   }
-  & > button { flex: 0 0 auto; }
+  & > button, & > span { flex: 0 0 3em; }
   & > .test-answers {
     margin: 1em;
     padding: 0;
