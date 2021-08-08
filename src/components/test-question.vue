@@ -1,7 +1,7 @@
 <template>
   <li class="test-question">
     <span>{{num}}</span>
-    <editable-text :edit="edit" v-model="questionValue" class="question-text" />
+    <editable-text :edit="edit" v-model="questionValue" class="question-text" :multiline="true" />
     <button v-if="edit" @click="$emit('remove')" title="Delete question">✖</button>
     <button @click="$emit('edit')" :title="edit ? 'OK' : 'Edit'">{{edit ? '✔' : '✎'}}</button>
     <ul class="test-answers">
@@ -34,7 +34,7 @@ export default Vue.extend({
       },
     },
     num() {
-      return `#${this.index < 10 ? '0' : ''}${(this.index as number) + 1}`;
+      return `#${this.index < 9 ? '0' : ''}${(this.index as number) + 1}`;
     },
   },
 });

@@ -102,8 +102,9 @@ export default new Vuex.Store({
       commit('updateQuestion', payload);
       dispatch('backup');
     },
-    editMode({ commit }, payload) {
+    editMode({ commit, dispatch }, payload) {
       commit('changeEditMode', payload);
+      dispatch('backup');
     },
     newAnswer({ commit, dispatch }, payload) {
       commit('addAnswer', payload);

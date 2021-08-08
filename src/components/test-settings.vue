@@ -63,5 +63,21 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
+.test-settings {
+  & > li {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  & label {
+    flex: 0 1 50%;
+    text-align: right;
+  }
+  & input {
+    margin: .25em 1em;
+    display: inline-block;
+    max-width: 4em;
+    flex: 0 1 4em;
+  }
+}
 </style>

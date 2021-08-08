@@ -85,6 +85,9 @@ export default Vue.extend({
       const input = e.target as HTMLInputElement;
       if (!input.files) return;
       this.$store.dispatch('load', input.files[0]);
+      this.$nextTick(() => {
+        input.value = '';
+      });
     },
   },
   mounted() {
@@ -128,7 +131,7 @@ button, .load-file {
   &:active { transform: translateY(10%); }
 }
 
-input {
+input, textarea {
   padding: .25em .5em;
   font-size: inherit;
   color: #ce9178;
