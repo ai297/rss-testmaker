@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { TestSettings, Question, Answer, Test } from './contracts';
+import { TestSettings, Question, Answer, Test, State } from './contracts';
 import { saveJson } from './out';
 import { getTestSettings, getQuestions } from './in';
 
@@ -10,26 +10,10 @@ const testSettings: TestSettings = {
   tresholdPercentage: 90,
   numberOfQuestions: 10,
   maxAttemptsNumber: 2,
-  strictAttemptsMode: true,
+  strictAttemptsMode: false,
 };
 
-const questions: Question[] = [
-  {
-    text: 'First question',
-    multiple: false,
-    editMode: false,
-    answers: [
-      {
-        text: 'first answer',
-        isCorrect: true,
-      },
-      {
-        text: 'second answer',
-        isCorrect: false,
-      },
-    ],
-  },
-];
+const questions: Question[] = [];
 
 export default new Vuex.Store({
   state: {
@@ -84,12 +68,23 @@ export default new Vuex.Store({
       state.questions = getQuestions(data);
       state.fileName = fileName;
     },
+    restoreState(state, { testSettings, questions, fileName }: State) {
+      state.testSettings = testSettings;
+      state.questions = questions;
+      state.fileName = fileName;
+    },
+    clearState(state) {
+      state.testSettings = testSettings;
+      state.fileName = 'new-test.json';
+      state.questions = questions;
+    },
   },
   actions: {
-    setSettings({ commit }, payload) {
+    setSettings({ commit, dispatch }, payload) {
       commit('setSettings', payload);
+      dispatch('backup');
     },
-    newQuestion({ commit, state }, multiple: boolean) {
+    newQuestion({ commit, state, dispatch }, multiple: boolean) {
       const question: Question = {
         text: `Question ${state.questions.length + 1}`,
         multiple,
@@ -97,32 +92,53 @@ export default new Vuex.Store({
         editMode: true,
       };
       commit('addQuestion', question);
+      dispatch('backup');
     },
-    removeQuestion({ commit }, questionIndex) {
+    removeQuestion({ commit, dispatch }, questionIndex) {
       commit('removeQuestion', questionIndex);
+      dispatch('backup');
     },
-    updateQuestion({ commit }, payload) {
+    updateQuestion({ commit, dispatch }, payload) {
       commit('updateQuestion', payload);
+      dispatch('backup');
     },
     editMode({ commit }, payload) {
       commit('changeEditMode', payload);
     },
-    newAnswer({ commit }, payload) {
+    newAnswer({ commit, dispatch }, payload) {
       commit('addAnswer', payload);
+      dispatch('backup');
     },
-    removeAnswer({ commit }, payload) {
+    removeAnswer({ commit, dispatch }, payload) {
       commit('removeAnswer', payload);
+      dispatch('backup');
     },
-    updateAnswer({ commit }, payload) {
+    updateAnswer({ commit, dispatch }, payload) {
       commit('updateAnswer', payload);
+      dispatch('backup');
     },
     save({ state }) {
       saveJson(state);
     },
-    async load({ commit }, file: File) {
+    async load({ commit, dispatch }, file: File) {
       const jsonString = await file.text();
       const data: Test = JSON.parse(jsonString);
       commit('setState', { fileName: file.name, data });
+      dispatch('backup');
+    },
+    backup({ state }) {
+      const jsonString = JSON.stringify(state);
+      window.localStorage.setItem('editor-state', jsonString);
+    },
+    restore({ commit }) {
+      const jsonString = window.localStorage.getItem('editor-state');
+      if (!jsonString) return;
+      const data: State = JSON.parse(jsonString);
+      commit('restoreState', data);
+    },
+    clear({ commit }) {
+      commit('clearState');
+      window.localStorage.removeItem('editor-state');
     },
   },
 });

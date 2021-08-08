@@ -6,6 +6,7 @@
         Load JSON
       </label>
       <button @click="save">Save JSON</button>
+      <button @click="clear">Clear</button>
     </div>
     <h2>Settings</h2>
     <test-settings/>
@@ -43,6 +44,7 @@
     </ul>
     <div class="controls">
       <button @click="save">Save JSON</button>
+      <button @click="clear">Clear</button>
     </div>
   </div>
 </template>
@@ -77,12 +79,16 @@ export default Vue.extend({
       'updateAnswer',
       'updateQuestion',
       'save',
+      'clear',
     ]),
     loadJson(e: InputEvent) {
       const input = e.target as HTMLInputElement;
       if (!input.files) return;
       this.$store.dispatch('load', input.files[0]);
     },
+  },
+  mounted() {
+    this.$store.dispatch('restore');
   },
 });
 </script>
