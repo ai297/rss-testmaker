@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <h2>Test settings</h2>
+    <h2>Test</h2>
+    <div class="controls">
+      <label class="load-file"><input type="file" ref="file">Load from file</label>
+      <button @click="save">Save JSON</button>
+    </div>
+    <h2>Settings</h2>
     <test-settings/>
     <h2>Questions</h2>
     <ul class="test-questions">
@@ -28,18 +33,22 @@
                      :isNew="true"
                      @add="(data) => newAnswer({ questionIndex, data })"/>
       </test-question>
-      <li class="add-question">
+      <li v-if="questions.length == 0" class="controls"><p>There are no questions in test.</p></li>
+      <li class="controls">
         <button @click="() => newQuestion(false)">Add question (single answer)</button>
         <button @click="() => newQuestion(true)">Add question (multiple answers)</button>
       </li>
     </ul>
+    <div class="controls">
+      <button @click="save">Save JSON</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import { State } from './store';
+import { State } from './contracts';
 import TestSettings from './components/test-settings.vue';
 import TestQuestion from './components/test-question.vue';
 import TestAnswer from './components/test-answer.vue';
@@ -64,6 +73,7 @@ export default Vue.extend({
     'newAnswer',
     'updateAnswer',
     'updateQuestion',
+    'save',
   ]),
 });
 </script>
@@ -85,7 +95,7 @@ h1 { color: #e6c300; }
 h2 { color: #c57991; }
 ul { list-style: none; }
 
-button {
+button, .load-file {
   margin: 0 .25em;
   padding: .5em 1em;
   border: none;
@@ -120,11 +130,12 @@ input {
 
 #app {
   width: 100%;
-  max-width: 600px;
+  max-width: 640px;
 }
 
-.add-question {
+.controls {
   display: flex;
   justify-content: center;
 }
+.load-file > input { display: none; }
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { TestSettings, Question, Answer } from './contracts';
+import { saveJson } from './out';
 
 Vue.use(Vuex);
 
@@ -29,13 +30,9 @@ const questions: Question[] = [
   },
 ];
 
-export type State = {
-  testSettings: TestSettings,
-  questions: Question[],
-};
-
 export default new Vuex.Store({
   state: {
+    fileName: 'new-test.json',
     testSettings,
     questions,
   },
@@ -111,6 +108,9 @@ export default new Vuex.Store({
     },
     updateAnswer({ commit }, payload) {
       commit('updateAnswer', payload);
+    },
+    save({ state }) {
+      saveJson(state);
     },
   },
 });

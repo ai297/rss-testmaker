@@ -27,3 +27,9 @@ export interface Question {
   answers: Answer[],
   editMode: boolean,
 }
+
+export type State = {
+  fileName: string,
+  testSettings: TestSettings,
+  questions: Question[],
+};

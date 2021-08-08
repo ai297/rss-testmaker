@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { State } from '../store';
+import { State } from '../contracts';
 
 export default Vue.extend({
   name: 'TestSettings',
