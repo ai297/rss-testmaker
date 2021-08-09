@@ -109,7 +109,10 @@ body {
 }
 
 h1 { color: #e6c300; }
-h2 { color: #c57991; }
+h2 {
+  color: #c57991;
+  border-bottom: solid 1px #c57991;
+}
 ul { list-style: none; }
 
 button, .load-file {
@@ -155,4 +158,11 @@ input, textarea {
   justify-content: center;
 }
 .load-file > input { display: none; }
+
+.test-questions {
+  & > li:not(:last-child) {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #54b14b;
+  }
+}
 </style>

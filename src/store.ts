@@ -18,8 +18,8 @@ const questions: Question[] = [];
 export default new Vuex.Store({
   state: {
     fileName: 'new-test.json',
-    testSettings,
-    questions,
+    testSettings: { ...testSettings },
+    questions: [ ...questions ],
   },
   mutations: {
     setSettings({ testSettings }, payload: Partial<TestSettings>) {
@@ -74,9 +74,9 @@ export default new Vuex.Store({
       state.fileName = fileName;
     },
     clearState(state) {
-      state.testSettings = testSettings;
+      state.testSettings = { ...testSettings };
       state.fileName = 'new-test.json';
-      state.questions = questions;
+      state.questions = [ ...questions ];
     },
   },
   actions: {
@@ -89,9 +89,10 @@ export default new Vuex.Store({
         text: `Question ${state.questions.length + 1}`,
         multiple,
         answers: [],
-        editMode: true,
+        editMode: false,
       };
       commit('addQuestion', question);
+      commit('changeEditMode', { questionIndex: state.questions.length - 1, enable: true })
       dispatch('backup');
     },
     removeQuestion({ commit, dispatch }, questionIndex) {

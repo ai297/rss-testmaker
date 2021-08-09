@@ -1,7 +1,7 @@
 <template>
   <div class="editable-text">
-    <input type="text" ref="editField" v-if="edit && !multiline" :value="value" @change="(e) => inputHandler(e.target.value)">
-    <textarea v-else-if="edit" ref="editMultiField" v-model="value" @change="(e) => inputHandler(e.target.value)"></textarea>
+    <input type="text" ref="editField" v-if="edit && !multiline" :value="value" @change="(e) => inputHandler(e.target.value)" :placeholder="placeholder">
+    <textarea v-else-if="edit" ref="editMultiField" :value="value" @change="(e) => inputHandler(e.target.value)" :placeholder="placeholder"></textarea>
     <span v-else>{{ value }}</span>
   </div>
 </template>
@@ -15,6 +15,7 @@ export default Vue.extend({
     edit: Boolean,
     value: String,
     multiline: Boolean,
+    placeholder: String,
   },
   methods: {
     inputHandler(value: string) {
@@ -41,6 +42,10 @@ export default Vue.extend({
     display: inline-block;
     font-size: inherit;
     border: solid 1px transparent;
+  }
+  
+  & > input {
+    line-height: 1.25em;
   }
 
   & > input, & > textarea {
