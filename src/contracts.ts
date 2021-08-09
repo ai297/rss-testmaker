@@ -2,6 +2,8 @@ export interface TestQuestion {
   question: string,
   answers: string[],
   multiple: boolean,
+  questionImage?: string,
+  answersType?: 'image';
 }
 
 export interface TestSettings {
@@ -9,7 +11,7 @@ export interface TestSettings {
   numberOfQuestions: number,
   maxAttemptsNumber: number,
   strictAttemptsMode: boolean,
-};
+}
 
 export interface Test {
   public: TestSettings & { questions: TestQuestion[] },
@@ -26,10 +28,12 @@ export interface Question {
   multiple: boolean,
   answers: Answer[],
   editMode: boolean,
+  questionImage?: string,
+  answersType?: 'image';
 }
 
 export type State = {
   fileName: string,
   testSettings: TestSettings,
   questions: Question[],
-};
+}

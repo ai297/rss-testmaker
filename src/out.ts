@@ -1,9 +1,11 @@
 import { Test, State, Question, TestQuestion } from './contracts';
 
-function convertQuestion({text, multiple, answers}: Question): TestQuestion {
+function convertQuestion({text, multiple, answers, answersType, questionImage}: Question): TestQuestion {
   return {
     question: text,
     multiple,
+    questionImage,
+    answersType,
     answers: answers.map(a => a.text),
   };
 }

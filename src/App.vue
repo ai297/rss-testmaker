@@ -1,13 +1,6 @@
 <template>
   <div id="app">
-    <div class="controls">
-      <label class="load-file">
-        <input type="file" ref="file" accept="application/json" @change="loadJson">
-        Load JSON
-      </label>
-      <button @click="save">Save JSON</button>
-      <button @click="clear">Clear</button>
-    </div>
+    <app-controls class="header"/>
     <h2>Settings</h2>
     <test-settings/>
     <h2>Questions</h2>
@@ -15,8 +8,10 @@
       <test-question v-for="(question, questionIndex) in questions"
                      :key="questionIndex"
                      :index="questionIndex"
-                     :value="question.text"
+                     :question="question.text"
                      :edit="question.editMode"
+                     :image="question.questionImage"
+                     :answersType="question.answersType"
                      @edit="() => editMode({ questionIndex, enable: !question.editMode })"
                      @remove="() => removeQuestion(questionIndex)"
                      @change="(text) => updateQuestion({questionIndex, data: { text }})">
@@ -29,6 +24,7 @@
                      :edit="question.editMode"
                      @remove="() => removeAnswer({ questionIndex, index })"
                      @change="(data) => updateAnswer({ questionIndex, index, data })"/>
+        <li v-if="question.answers.length == 0"><p class="info">No answers for this question.</p></li>
         <test-answer v-if="question.editMode"
                      :questionIndex="questionIndex"
                      :multiple="question.multiple"
@@ -36,16 +32,13 @@
                      :isNew="true"
                      @add="(data) => newAnswer({ questionIndex, data })"/>
       </test-question>
-      <li v-if="questions.length == 0" class="controls"><p>There are no questions in test.</p></li>
+      <li v-if="questions.length == 0"><p class="info">There are no questions in test.</p></li>
       <li class="controls">
         <button @click="() => newQuestion(false)">Add question (single answer)</button>
         <button @click="() => newQuestion(true)">Add question (multiple answers)</button>
       </li>
     </ul>
-    <div class="controls">
-      <button @click="save">Save JSON</button>
-      <button @click="clear">Clear</button>
-    </div>
+    <app-controls class="footer"/>
   </div>
 </template>
 
@@ -53,6 +46,7 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { State } from './contracts';
+import AppControls from './components/app-controls.vue';
 import TestSettings from './components/test-settings.vue';
 import TestQuestion from './components/test-question.vue';
 import TestAnswer from './components/test-answer.vue';
@@ -60,6 +54,7 @@ import TestAnswer from './components/test-answer.vue';
 export default Vue.extend({
   name: 'App',
   components: {
+    AppControls,
     TestSettings,
     TestQuestion,
     TestAnswer,
@@ -78,17 +73,7 @@ export default Vue.extend({
       'newAnswer',
       'updateAnswer',
       'updateQuestion',
-      'save',
-      'clear',
     ]),
-    loadJson(e: InputEvent) {
-      const input = e.target as HTMLInputElement;
-      if (!input.files) return;
-      this.$store.dispatch('load', input.files[0]);
-      this.$nextTick(() => {
-        input.value = '';
-      });
-    },
   },
   mounted() {
     this.$store.dispatch('restore');
@@ -100,6 +85,9 @@ export default Vue.extend({
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,6 +101,7 @@ h2 {
   color: #c57991;
   border-bottom: solid 1px #c57991;
 }
+h4 { margin: 0.5em 0; }
 ul { list-style: none; }
 
 button, .load-file {
@@ -133,7 +122,7 @@ button, .load-file {
   &:active { transform: translateY(10%); }
 }
 
-input, textarea {
+input, textarea, select {
   padding: .25em .5em;
   font-size: inherit;
   color: #ce9178;
@@ -151,18 +140,26 @@ input, textarea {
 #app {
   width: 100%;
   max-width: 640px;
-}
-
-.controls {
+  flex: 1 1 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
-.load-file > input { display: none; }
 
 .test-questions {
+  flex: 1 1 auto;
   & > li:not(:last-child) {
     margin-bottom: 1em;
     border-bottom: 1px solid #54b14b;
   }
+}
+.header, .footer {
+  padding: .5em;
+  background-color: #2c2a2a;
+}
+.header { border-radius: .5em; }
+.footer { border-radius: .5em .5em 0 0; }
+.info {
+  color: #b3ba7d;
+  text-align: center;
 }
 </style>

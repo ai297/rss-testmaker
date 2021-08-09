@@ -10,10 +10,12 @@ export function getTestSettings(json: Test): TestSettings {
 }
 
 export function getQuestions(json: Test): Question[] {
-  return json.public.questions.map(({ question, answers, multiple }, questionIndex) => ({
+  return json.public.questions.map(({ question, answers, multiple, answersType, questionImage }, questionIndex) => ({
     text: question,
     multiple,
     editMode: false,
+    questionImage,
+    answersType,
     answers: answers.map((a, index) => ({
       text: a,
       isCorrect: json.answers[questionIndex].includes(index),

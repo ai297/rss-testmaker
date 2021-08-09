@@ -1,10 +1,17 @@
 <template>
   <li class="test-question">
     <span>{{num}}</span>
-    <editable-text :edit="edit" v-model="questionValue" class="question-text" :multiline="true" placeholder="Please, write the question here" />
+    <editable-text :edit="edit" :value="question" class="question-text" :multiline="true" placeholder="Please, write the question here" />
     <button @click="$emit('remove')" title="Delete question">✖</button>
     <button @click="$emit('edit')" :title="edit ? 'OK' : 'Edit'">{{edit ? '✔' : '✎'}}</button>
+    <div class="image-type" v-if="edit">
+      <span>Image:</span>
+      <editable-text :edit="edit" :value="questionImage" class="image-field" placeholder="Question image"/>
+      <span>Answers type:</span>
+      <answers-tyep-select :value="type" class="type-select"/>
+    </div>
     <ul class="test-answers">
+      <li><h4 v-if="edit">Answers:</h4></li>
       <slot></slot>
     </ul>
   </li>
@@ -13,25 +20,27 @@
 <script lang="ts">
 import Vue from 'vue';
 import EditableText from './editable-text.vue';
+import AnswersTyepSelect from './answer-types.vue';
 
 export default Vue.extend({
   name: 'TestQuestion',
   components: {
     EditableText,
+    AnswersTyepSelect,
   },
   props: {
     edit: Boolean,
-    value: String,
+    question: String,
+    image: String,
+    answersType: String,
     index: Number,
   },
   computed: {
-    questionValue: {
-      get() {
-        return (this as {value: string}).value;
-      },
-      set(val) {
-        (this as Vue).$emit('change', val);
-      },
+    type() {
+      return this.answersType ?? '';
+    },
+    questionImage() {
+      return this.image ?? '';
     },
     num() {
       return `#${this.index < 9 ? '0' : ''}${(this.index as number) + 1}`;
@@ -59,6 +68,17 @@ export default Vue.extend({
     margin: .5em;
     padding: 0;
     flex: 0 1 100%;
+  }
+  & > .image-type {
+    flex: 1 0 100%;
+    display: flex;
+    & > span {
+      padding: 0 1em 0 .5em;
+      flex: 0 0 auto;
+      line-height: 1.5em;
+    }
+    & > .image-field { flex: 1 1 auto; }
+    & > .type-select { flex: 0 0 auto; }
   }
 }
 </style>

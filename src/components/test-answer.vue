@@ -79,9 +79,6 @@ export default Vue.extend({
     flex: 0 0 3em;
     font-size: .9em;
   }
-  & > h4 {
-    margin: 0.5em 0;
-    flex: 1 1 100%;
-  }
+  & > h4 { flex: 1 1 100%; }
 }
 </style>
