@@ -56,10 +56,13 @@ export default new Vuex.Store({
     updateAnswer({ questions }, payload: { questionIndex: number, index: number, data: Partial<Answer> }) {
       questions[payload.questionIndex].answers[payload.index].text =
         payload.data.text ?? questions[payload.questionIndex].answers[payload.index].text;
+
       if (payload.data.isCorrect && !questions[payload.questionIndex].multiple) {
         questions[payload.questionIndex].answers.forEach(a => a.isCorrect = false);
-        questions[payload.questionIndex].answers[payload.index].isCorrect = payload.data.isCorrect;
       }
+
+      questions[payload.questionIndex].answers[payload.index].isCorrect =
+        payload.data.isCorrect ?? questions[payload.questionIndex].answers[payload.index].isCorrect;
     },
     changeEditMode({ questions }, payload: { questionIndex: number, enable: boolean }) {
       if (payload.enable) questions.forEach(q => q.editMode = false);
