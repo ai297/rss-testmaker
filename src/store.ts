@@ -37,6 +37,8 @@ export default new Vuex.Store({
     updateQuestion({ questions }, payload: { questionIndex: number, data: Partial<Question> }) {
       questions[payload.questionIndex].text =
         payload.data.text ?? questions[payload.questionIndex].text;
+      questions[payload.questionIndex].questionImage = payload.data.questionImage
+      questions[payload.questionIndex].answersType = payload.data.answersType;
       questions[payload.questionIndex].editMode =
         payload.data.editMode ?? questions[payload.questionIndex].editMode;
       questions[payload.questionIndex].multiple =
