@@ -1,14 +1,26 @@
 <template>
   <li class="test-question">
+    <div v-if="image" class="question-image">
+      <img :src="image" :alt="`Image for question #${num}`">
+    </div>
     <span>{{num}}</span>
-    <editable-text :edit="edit" :value="question" class="question-text" :multiline="true" placeholder="Please, write the question here" />
+    <editable-text :edit="edit"
+                   :value="question"
+                   :multiline="true"
+                   @input="changeQuestion"
+                   class="question-text"
+                   placeholder="Please, write the question here" />
     <button @click="$emit('remove')" title="Delete question">✖</button>
     <button @click="$emit('edit')" :title="edit ? 'OK' : 'Edit'">{{edit ? '✔' : '✎'}}</button>
     <div class="image-type" v-if="edit">
       <span>Image:</span>
-      <editable-text :edit="edit" :value="questionImage" class="image-field" placeholder="Question image"/>
+      <editable-text :edit="edit"
+                     :value="questionImage"
+                     @input="changeImage"
+                     class="image-field"
+                     placeholder="Question image"/>
       <span>Answers type:</span>
-      <answers-tyep-select :value="type" class="type-select"/>
+      <answers-tyep-select :value="type" @input="changeAnswersType" class="type-select"/>
     </div>
     <ul class="test-answers">
       <li><h4 v-if="edit">Answers:</h4></li>
@@ -46,6 +58,17 @@ export default Vue.extend({
       return `#${this.index < 9 ? '0' : ''}${(this.index as number) + 1}`;
     },
   },
+  methods: {
+    changeQuestion(text: string) {
+      this.$emit('change', { text, questionImage: this.image, answersType: this.answersType });
+    },
+    changeImage(questionImage: string) {
+      this.$emit('change', { text: this.question, questionImage, answersType: this.answersType });
+    },
+    changeAnswersType(answersType: string) {
+      this.$emit('change', { text: this.question, questionImage: this.image, answersType: answersType ? answersType : undefined });
+    },
+  },
 });
 </script>
 
@@ -79,6 +102,17 @@ export default Vue.extend({
     }
     & > .image-field { flex: 1 1 auto; }
     & > .type-select { flex: 0 0 auto; }
+  }
+  & > .question-image {
+    flex: 0 0 100%;
+    max-width: 100%;
+    max-height: 30em;
+    margin: 0 0 1em 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > img { max-width: 100%; }
   }
 }
 </style>

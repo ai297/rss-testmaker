@@ -7,7 +7,11 @@
                    :multiple="multiple"
                    @input="changeMark"
                    class="answer-mark" />
-    <editable-text :value="isNew ? newData.text : text"
+    <div v-if="!edit && isImage" class="answer-image">
+      <img :src="text" :alt="`Answer image for ${questionIndex + 1} question`">
+    </div>
+    <editable-text v-else
+                   :value="isNew ? newData.text : text"
                    :edit="edit"
                    @input="changeText"
                    class="answer-text"
@@ -35,6 +39,7 @@ export default Vue.extend({
     correct: Boolean,
     multiple: Boolean,
     isNew: Boolean,
+    isImage: Boolean,
   },
   data() {
     return {
@@ -80,5 +85,15 @@ export default Vue.extend({
     font-size: .9em;
   }
   & > h4 { flex: 1 1 100%; }
+  & > .answer-image {
+    flex: 1 1 80%;
+    max-height: 20em;
+    margin: .5em 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > img { max-width: 100%; }
+  }
 }
 </style>

@@ -14,7 +14,7 @@
                      :answersType="question.answersType"
                      @edit="() => editMode({ questionIndex, enable: !question.editMode })"
                      @remove="() => removeQuestion(questionIndex)"
-                     @change="(text) => updateQuestion({questionIndex, data: { text }})">
+                     @change="data => updateQuestion({questionIndex, data})">
         <test-answer v-for="(answer, index) in question.answers"
                      :key="index"
                      :questionIndex="questionIndex"
@@ -22,6 +22,7 @@
                      :correct="answer.isCorrect"
                      :multiple="question.multiple"
                      :edit="question.editMode"
+                     :isImage="question.answersType == 'image'"
                      @remove="() => removeAnswer({ questionIndex, index })"
                      @change="(data) => updateAnswer({ questionIndex, index, data })"/>
         <li v-if="question.answers.length == 0"><p class="info">No answers for this question.</p></li>
