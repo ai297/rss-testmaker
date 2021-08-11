@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { TestSettings, Question, Answer, Test, State } from './contracts';
-import { saveJson } from './out';
+import { convertState } from './out';
 import { getTestSettings, getQuestions } from './in';
 
 Vue.use(Vuex);
@@ -124,13 +124,11 @@ export default new Vuex.Store({
       commit('updateAnswer', payload);
       dispatch('backup');
     },
-    save({ state }) {
-      saveJson(state);
+    getTest({ state }): Promise<Test> {
+      return Promise.resolve(convertState(state));
     },
-    async load({ commit, dispatch }, file: File) {
-      const jsonString = await file.text();
-      const data: Test = JSON.parse(jsonString);
-      commit('setState', { fileName: file.name, data });
+    load({ commit, dispatch }, payload) {
+      commit('setState', payload);
       dispatch('backup');
     },
     backup({ state }) {

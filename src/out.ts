@@ -10,7 +10,7 @@ function convertQuestion({text, multiple, answers, answersType, questionImage}: 
   };
 }
 
-function convertState({ testSettings, questions }: State): Test {
+export function convertState({ testSettings, questions }: State): Test {
   return {
     public: {
       ...testSettings,
@@ -21,12 +21,13 @@ function convertState({ testSettings, questions }: State): Test {
   };
 }
 
+export const convertToJson = (test: Test): string => JSON.stringify(test, null, 2);
+
 const saveLink = document.createElement('a');
 
-export function saveJson(state: State): void {
-  const data = JSON.stringify(convertState(state), null, 2);
+export function saveJson(data: string, fileName: string): void {
   const file = new Blob([ data ], { type: 'application/json' });
   saveLink.href = URL.createObjectURL(file);
-  saveLink.download = state.fileName;
+  saveLink.download = fileName;
   saveLink.click();
 }
