@@ -121,6 +121,7 @@ button, .load-file {
 
   &:hover { background-color: #67cdfe; }
   &:active { transform: translateY(10%); }
+  &:disabled { background-color: #c57991; }
 }
 
 input, textarea, select {
