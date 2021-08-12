@@ -1,6 +1,11 @@
 <template>
   <div id="app">
     <app-controls class="header"/>
+    <div class="file-name">
+      File name:
+      <editable-text :edit="isEditFileName" v-model="fileName" class="file-name-input"/>
+      <button @click="isEditFileName = !isEditFileName">{{isEditFileName ? '✔' : '✎'}}</button>
+    </div>
     <h2>Settings</h2>
     <test-settings/>
     <h2>Questions</h2>
@@ -47,6 +52,7 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { State } from './contracts';
+import EditableText from './components/editable-text.vue';
 import AppControls from './components/app-controls.vue';
 import TestSettings from './components/test-settings.vue';
 import TestQuestion from './components/test-question.vue';
@@ -55,14 +61,29 @@ import TestAnswer from './components/test-answer.vue';
 export default Vue.extend({
   name: 'App',
   components: {
+    EditableText,
     AppControls,
     TestSettings,
     TestQuestion,
     TestAnswer,
   },
+  data() {
+    return {
+      isEditFileName: false,
+    };
+  },
   computed: {
     questions() {
       return (this.$store.state as State).questions;
+    },
+    fileName: {
+      get() {
+        return String(this.$store.state.fileName).replace(/.json$/i, '');
+      },
+      set(val: string) {
+        const fileName = val.replace(/.json$/ig, '') + '.json';
+        this.setFileName(fileName);
+      },
     },
   },
   methods: {
@@ -74,6 +95,7 @@ export default Vue.extend({
       'newAnswer',
       'updateAnswer',
       'updateQuestion',
+      'setFileName',
     ]),
   },
   mounted() {
@@ -163,5 +185,19 @@ input, textarea, select {
 .info {
   color: #b3ba7d;
   text-align: center;
+}
+.file-name {
+  display: flex;
+  margin: .5em;
+  align-items: center;
+  justify-content: center;
+  &-input {
+    flex: 0 1 50%;
+    margin: 0 .5em;
+    font-size: 1.2em;
+  }
+  & > button {
+    padding: .25em .5em;
+  }
 }
 </style>

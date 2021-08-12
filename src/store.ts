@@ -83,6 +83,9 @@ export default new Vuex.Store({
       state.fileName = 'new-test.json';
       state.questions = [ ...questions ];
     },
+    setFileName(state, fileName) {
+      state.fileName = fileName;
+    }
   },
   actions: {
     setSettings({ commit, dispatch }, payload) {
@@ -144,6 +147,10 @@ export default new Vuex.Store({
     clear({ commit }) {
       commit('clearState');
       window.localStorage.removeItem('editor-state');
+    },
+    setFileName({ commit, dispatch }, fileName) {
+      commit('setFileName', fileName);
+      dispatch('backup');
     },
   },
 });
